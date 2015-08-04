@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+    <title> Advanced JavaScript Project: Favorites and Tags </title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Helvetica, Ariel, sans-serif;
+        }
+
+        #form-border {
+            border: 1px solid black;
+            border-spacing: 5px;
+            padding: 10px;
+            width: 40%;
+        }
+
+        #comment {
+            font-size: 80%;
+            color: #777777;
+        }
+
+        #tags {
+            font-size: 80%;
+            color: rgb(48, 99, 170);
+        }
+    </style>
+    <script>
+        //I decided only to use constructor functions,because it makes the code a lot cleaner,
+        // and the risk of polluting the code with global variables is minimised.
+
+        // Constructor Function that validate and hold the data from the input form.
+        // I use the constructor function, because it enables me to use "this" to initialize the values
+        function NewFavorite(url, title, comment, tags) {
+
+            //very simple validation of the data, it only checks if a field is empty.
+            this.valid = true;
+
+            if (url == '') {
+                this.valid = false;
+                return alert('Type a valid url to continue')
+            }
+            else if (title == '') {
+                this.valid = false;
+                return alert('Type a title to continue')
+
+            }
+            else if (comment == '') {
+                this.valid = false;
+                return alert('Type a comment to continue')
+
+            }
+            else if (tags == '') {
+                this.valid = false;
+                return alert('Type at least one tag to continue')
+            }
+            else {
+                this.url = url;
+                this.title = title;
+                this.comment = comment;
+                this.tags = tags;
+
+            }
+
+        }
+
+        // Constructor Function that holds all the single favorite objects, console.logs the data and display the html on the website. furthermore
+        // using a constructor function enables me to use "this" inside the function.
+        function AllFavorites(fav) {
+
+                this.url = fav.url;
+                this.title = fav.title;
+                this.comment = fav.comment;
+                this.tags = fav.tags;
+
+                //method to console.log data
+                this.displayLog = function () {
+                    console.log('Bob´s favorites are URL: ' + this.url + ', title: ' + this.title + ', comment: ' + this.comment + ', tags: ' + this.tags);
+                };
+                //method to display the formatted data
+                this.displayHtml = function () {
+                    var aTag = document.createElement('a');
+                    var brTag = document.createElement("br");
+                    var listTag = document.createElement("li");
+                    var pComment = document.createElement("p");
+                    var pTags = document.createElement("p");
+
+                    aTag.setAttribute('href', this.url);
+                    aTag.innerHTML = this.title;
+                    var list = document.getElementById("fav-list").appendChild(listTag);
+                    list.appendChild(aTag);
+
+                    var commentTxt = document.createTextNode(this.comment);
+                    pComment.appendChild(commentTxt);
+                    var comment = document.getElementById("fav-list").appendChild(pComment);
+                    comment.setAttribute('id', 'comment')
+
+                    var tagsTxt = document.createTextNode('Tags: ' + this.tags);
+                    pTags.appendChild(tagsTxt);
+                    var tags = document.getElementById("fav-list").appendChild(pTags);
+                    tags.setAttribute('id', 'tags');
+
+                    document.getElementById("fav-list").appendChild(brTag);
+                };
+        }
+
+        //call this function onclick on the button in the inputform
+        function getData() {
+
+            // get the formdata and asign the values to the variables
+            var urlVal = document.favs.url.value;
+            var titleVal = document.favs.title.value;
+            var commentVal = document.favs.comment.value;
+            var tagVal = document.favs.tags.value;
+
+            // create a NewFavorite object to hold the values from the input form
+            var fav = new NewFavorite(urlVal, titleVal, commentVal, tagVal);
+
+            //If the formdata is valid, create a new AllFavorites with the data from the NewFavorite constructor function
+            // and display these in the console and the website..
+            if (fav.valid === true) {
+                var display = new AllFavorites(fav);
+
+                //display the formatted data
+                display.displayHtml();
+
+                //console.log details
+                display.displayLog();
+
+                document.favs.url.value = '';
+                document.favs.title.value = '';
+                document.favs.comment.value = '';
+                document.favs.tags.value = '';
+
+            }
+
+
+
+        }
+
+
+    </script>
+</head>
+<body>
+
+<h1>Tag and save your favorites</h1>
+
+<div id="form-border">
+    <p>Add a new favorite</p>
+
+    <form name="favs">
+        <table>
+            <tr>
+                <td>
+                    URL:
+                </td>
+                <td>
+                    <input type="url" name="url" size="50">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Title:
+                </td>
+                <td>
+                    <input type="text" name="title" size="50">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Comment:
+                </td>
+                <td>
+                    <input type="text" name="comment" size="50">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tags:
+                </td>
+                <td>
+                    <input type="text" name="tags" size="50">
+                </td>
+            </tr>
+
+        </table>
+
+        <br/>
+        <input type="button" name="test" value="Add link" onclick="getData()">
+
+
+    </form>
+</div>
+<h1>List of favorites</h1>
+<ul id="fav-list"></ul>
+
+</body>
+
+</html>
