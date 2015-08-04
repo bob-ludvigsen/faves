@@ -86,6 +86,7 @@
                     var pTags = document.createElement("p");
 
                     aTag.setAttribute('href', this.url);
+                    aTag.setAttribute('target', 'blank');
                     aTag.innerHTML = this.title;
                     var list = document.getElementById("fav-list").appendChild(listTag);
                     list.appendChild(aTag);
